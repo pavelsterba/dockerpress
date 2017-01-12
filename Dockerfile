@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Update & upgrade
 RUN apt-get update
 RUN apt-get -y upgrade
-RUN apt-get install -y curl pwgen
+RUN apt-get install -y curl pwgen vim
 
 # Remove old PHP5
 RUN apt-get purge php5-*
@@ -27,7 +27,7 @@ RUN rm -f /tmp/dotdeb.gpg
 RUN apt-get update
 
 # Install PHP7
-RUN apt-get install -y php7.0-fpm php7.0-mysql
+RUN apt-get install -y php7.0-fpm php7.0-mysql php7.0-gd php7.0-curl php7.0-imagick php7.0-imap php7.0-mcrypt php7.0-xmlrpc
 COPY data/www.conf /etc/php/7.0/fpm/pool.d
 
 # Install MariaDB
