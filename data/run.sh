@@ -46,7 +46,7 @@ if [ ! -f /var/www/wp-config.php ]; then
     /'LOGGED_IN_SALT'/s/put your unique phrase here/`pwgen -c -n -1 65`/
     /'NONCE_SALT'/s/put your unique phrase here/`pwgen -c -n -1 65`/" /var/www/wp-config-sample.php > /var/www/wp-config.php
 
-    # Configure permissions
+    # Configure permissions for Wordpress
     chown -R www-data:www-data /var/www/
     find /var/www/ -type d -exec chmod 755 {} \;
     find /var/www/ -type f -exec chmod 644 {} \;
@@ -90,11 +90,9 @@ fi
 
 if [ $DOCKERPRESS_UP_AND_RUNNING -eq 1 ]; then
     echo "Wordpress is ready to go!"
+    tail -f /var/log/nginx/access.log
 else
     echo "Not all services are running, try to restart or recreate your container."
     echo "If the problem remains, please report it here:"
     echo "    https://github.com/pavelsterba/dockerpress/issues"
 fi
-
-# Something endless...
-tail -f /var/log/nginx/access.log
