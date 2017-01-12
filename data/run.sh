@@ -55,7 +55,46 @@ if [ ! -f /var/www/wp-config.php ]; then
     echo "define('FS_METHOD', 'direct');" >> /var/www/wp-config.php
 fi
 
-echo "Wordpress is ready to go!"
+echo "Checking nginx, PHP and MySQL status:"
+DOCKERPRESS_UP_AND_RUNNING=1
+
+# Get nginx status
+service nginx status > /dev/null 2>&1
+DOCKERPRESS_NGINX_STATUS=$?
+if [ $DOCKERPRESS_NGINX_STATUS -eq 0 ]; then
+    echo "    [ ok ] nginx is running"
+else
+    echo "    [FAIL] nginx is not running"
+    DOCKERPRESS_UP_AND_RUNNING=0
+fi
+
+# Get PHP7 status
+service php7.0-fpm status > /dev/null 2>&1
+DOCKERPRESS_PHP_STATUS=$?
+if [ $DOCKERPRESS_PHP_STATUS -eq 0 ]; then
+    echo "    [ ok ] php is running"
+else
+    echo "    [FAIL] php is not running"
+    DOCKERPRESS_UP_AND_RUNNING=0
+fi
+
+# Get MySQL status
+service mysql status > /dev/null 2>&1
+DOCKERPRESS_MYSQL_STATUS=$?
+if [ $DOCKERPRESS_MYSQL_STATUS -eq 0 ]; then
+    echo "    [ ok ] mysql is running"
+else
+    echo "    [FAIL] mysql is not running"
+    DOCKERPRESS_UP_AND_RUNNING=0
+fi
+
+if [ $DOCKERPRESS_UP_AND_RUNNING -eq 1 ]; then
+    echo "Wordpress is ready to go!"
+else
+    echo "Not all services are running, try to restart or recreate your container."
+    echo "If the problem remains, please report it here:"
+    echo "    https://github.com/pavelsterba/dockerpress/issues"
+fi
 
 # Something endless...
 tail -f /var/log/nginx/access.log
