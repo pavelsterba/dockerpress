@@ -33,6 +33,7 @@ COPY data/www.conf /etc/php/7.0/fpm/pool.d
 # Install MariaDB
 RUN apt-get install -y mariadb-server mariadb-client
 COPY data/my.cnf /etc/mysql/
+VOLUME /var/lib/mysql
 
 # Expose port 80
 EXPOSE 80
